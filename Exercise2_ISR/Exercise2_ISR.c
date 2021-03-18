@@ -8,13 +8,10 @@
 #include<avr/interrupt.h>
 #include<util/delay.h>
 
+unsigned char g_Interrupt_Flag = 0;
+
 ISR(INT1_vect){
-	for(int i = 0; i<5 ;i++){
-		PORTC = 0xFF;
-		_delay_ms(500);
-		PORTC = 0x00;
-		_delay_ms(500);
-	}
+	g_Interrupt_Flag = 1;
 }
 
 void INT1_Init(void){
@@ -31,15 +28,23 @@ int main(void){
 	DDRC = 0xFF;							// Configure PORTC as Output
 	PORTC = 0x00;							// Initialize PORTC to 0
 
+	unsigned char Loop_idx;
 	while(1){
-		for(int i = 0; i < 8 ; ){
-			PORTC |= (1<<i);
-			_delay_ms(500);
-			PORTC &= (~(1<<i));
-			i++;
-			if(i == 8){
-				i = 0;
-			}
+		if(g_Interrupt_Flag == 0){
+
+					_delay_ms(500);
+					PORTC = (PORTC<<1);
+					if(PORTC == 0x00){
+						PORTC = 0x01;
+					}
+		}
+		else if(g_Interrupt_Flag == 1){
+			for(Loop_idx = 0; Loop_idx < 5 ; Loop_idx++){
+					PORTC = 0xFF;
+					_delay_ms(500);
+					PORTC = 0x00;
+					_delay_ms(500);
+				}
 		}
 	}
 }

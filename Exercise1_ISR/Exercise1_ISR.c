@@ -1,6 +1,6 @@
 /*
  * Exercise1.c
- * Description: Embedded C code using ATmega16 uC to control 7-segment using Two push button
+ * Description: Embedded C code using ATmega16 uC to Toggle LED by external interrupt INT0
  * Created on: Mar 18, 2021
  * Author: Muhammad Farid
  */
@@ -14,7 +14,7 @@ ISR(INT0_vect){
 
 void INT0_Init(void){
 	DDRD &= (~(1<<PD2));					// configure PIN PD2 as input
-	MCUCR |= (1<<ISC00) | (1<<ISC01);		// Trigger INT0 with raising edge
+	MCUCR |= (1<<ISC00) | (1<<ISC01);		// Trigger INT0 with rising edge
 	GICR |= (1<<INT0);                      // Enable external interrupt pin INT0
 	SREG |= (1<<7);							// Enable I-bit
 }
